@@ -1,0 +1,15 @@
+{
+    "name": "kpanda/advent-2022",
+    "autoload": {
+        "psr-4": {
+            "Kpanda\\Advent2022\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Darko Ivkov",
+            "email": "bVNyDUKE@protonmail.com"
+        }
+    ],
+    "require": {},
+}

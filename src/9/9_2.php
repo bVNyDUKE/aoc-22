@@ -28,65 +28,20 @@ function getTailPos(array $tailPos, array $headPos)
     return [$newX, $newY];
 }
 
-$t = [
-    [
-        [0, 0],
-    ],
-    [
-        [0, 0]
-    ],
-    [
-        [0, 0]
-    ],
-    [
-        [0, 0]
-    ],
-    [
-        [0, 0]
-    ],
-    [
-        [0, 0]
-    ],
-    [
-        [0, 0]
-    ],
-    [
-        [0, 0]
-    ],
-    [
-        [0, 0]
-    ],
-    [
-        [0, 0]
-    ],
-];
+const KNOTS = 9;
 
-function makeMove(array $h, array $t, string $dir): array
-{
-    [$hX, $hY] = $h;
-    $newHead = [];
-    switch ($dir) {
-        case 'R':
-            $newHead = [$hX + 1, $hY];
-            break;
-        case 'L':
-            $newHead = [$hX - 1, $hY];
-            break;
-        case 'U':
-            $newHead = [$hX, $hY + 1];
-            break;
-        case 'D':
-            $newHead = [$hX, $hY - 1];
-            break;
-    }
-    $newT = getTailPos($t[array_key_last($t)], $h);
-    return [$newHead, $newT];
+$k = [];
+
+foreach (range(0, KNOTS) as $_) {
+    $k[] = [
+        [0, 0]
+    ];
 }
 
 foreach ($lines as [$dir, $count]) {
     $count = intval($count);
     for ($c = 0; $c < $count; $c++) {
-        [$hX, $hY] = $t[0][array_key_last($t[0])];
+        [$hX, $hY] = $k[0][array_key_last($k[0])];
         $newHead = [];
         switch ($dir) {
             case 'R':
@@ -103,15 +58,15 @@ foreach ($lines as [$dir, $count]) {
                 break;
         }
 
-        $t[0][] = $newHead;
+        $k[0][] = $newHead;
 
-        for ($i = 1; $i < 10; $i++) {
-            $newT = getTailPos($t[$i][array_key_last($t[$i])], $t[$i - 1][array_key_last($t[$i - 1])]);
-            $t[$i][] = $newT;
+        for ($i = 1; $i < KNOTS + 1; $i++) {
+            $newT = getTailPos($k[$i][array_key_last($k[$i])], $k[$i - 1][array_key_last($k[$i - 1])]);
+            $k[$i][] = $newT;
         }
     }
 }
 
 
-$a = array_unique($t[9], SORT_REGULAR);
+$a = array_unique($k[KNOTS], SORT_REGULAR);
 print_r(count($a));

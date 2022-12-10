@@ -21,11 +21,9 @@ function cycleChange(int $cycle, int $reg, array &$screen): void
     $spritePosition = [$reg - 1, $reg, $reg + 1];
     $drawingPixel = $cycle - 1;
 
-    $row = floor($cycle / WIDTH);
+    $row = floor($drawingPixel / WIDTH);
 
-    if ($row > 0) {
-        $drawingPixel = $drawingPixel - $row * WIDTH;
-    }
+    $drawingPixel = $drawingPixel - $row * WIDTH;
 
     if (in_array($drawingPixel, $spritePosition)) {
         $screen[$row][$drawingPixel] = '#';

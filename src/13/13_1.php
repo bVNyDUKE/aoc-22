@@ -1,60 +1,53 @@
 <?php
 
-$lines = explode(PHP_EOL . PHP_EOL, trim(file_get_contents('src/13/example.txt', "r")));
+$lines = explode(PHP_EOL . PHP_EOL, trim(file_get_contents('src/13/input.txt', "r")));
 $lines = array_map(fn ($a) => explode(PHP_EOL, trim($a)), $lines);
 
-$r = [];
-
-function cmp(array|int &$f, array|int &$s): bool
+function cmp(array|int $f, array|int $s): int
 {
-    if (is_int($f) && is_array($s)) {
-        $s = $s[0];
-    }
-    if (is_int($s) && is_array($f)) {
-        $f = $f[0];
-    }
     if (is_int($f) && is_int($s)) {
-        return $f <= $s;
-    }
-
-    $order = true;
-    while (count($f) && count($s)) {
-        $ff = array_shift($f);
-        $ss = array_shift($s);
-
-        $order = cmp($ff, $ss);
-
-        if (!$order) {
-            return $order;
+        if ($f < $s) {
+            return -1;
+        } elseif ($f == $s) {
+            return 0;
+        } else {
+            return 1;
         }
+    } elseif (is_array($f) && is_array($s)) {
+        $i = 0;
+        while ($i < count($f) && $i < count($s)) {
+            $c = cmp($f[$i], $s[$i]);
+            if ($c == -1) {
+                return -1;
+            }
+            if ($c == 1) {
+                return 1;
+            }
+            ++$i;
+        }
+        if ($i == count($f) && $i < count($s)) {
+            return -1;
+        } elseif ($i == count($s) && $i < count($f)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    } elseif (is_int($f) && is_array($s)) {
+        return cmp([$f], $s);
+    } else {
+        return cmp($f, [$s]);
     }
-
-    if (!count($f) && count($s)) {
-        $order = true;
-        return $order;
-    }
-
-    if (count($f) && !count($s)) {
-        $order = false;
-        return $order;
-    }
-
-    return $order;
 }
 
+$res = 0;
 foreach ($lines as $i => $pack) {
     $f = $s = [];
     eval('$f = ' . $pack[0] . ';');
     eval('$s = ' . $pack[1] . ';');
 
-    if (count($f) > count($s)) {
-        continue;
-    }
-
-    $ord = cmp($f, $s);
-    if ($ord) {
-        $r[] = $i + 1;
+    if (cmp($f, $s) == -1) {
+        $res += 1 + $i;
     }
 }
 
-print_r(array_unique($r));
+print_r($res);

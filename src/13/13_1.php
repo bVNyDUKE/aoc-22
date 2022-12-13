@@ -40,14 +40,34 @@ function cmp(array|int $f, array|int $s): int
 }
 
 $res = 0;
+$packs = [];
 foreach ($lines as $i => $pack) {
     $f = $s = [];
     eval('$f = ' . $pack[0] . ';');
     eval('$s = ' . $pack[1] . ';');
+
+    array_push($packs, $f);
+    array_push($packs, $s);
 
     if (cmp($f, $s) == -1) {
         $res += 1 + $i;
     }
 }
 
-print_r($res);
+array_push($packs, [[2]]);
+array_push($packs, [[6]]);
+
+usort($packs, "cmp");
+
+$div1 = $div2 = 0;
+
+foreach ($packs as $key => $val) {
+    if ($val === [[2]]) {
+        $div1 = $key + 1;
+    }
+    if ($val === [[6]]) {
+        $div2 = $key + 1;
+    }
+}
+
+print_r($div1 * $div2);

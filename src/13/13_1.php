@@ -8,10 +8,12 @@ $r = [];
 function cmp(array|int &$f, array|int &$s): bool
 {
     if (is_int($f) && is_array($s)) {
-        $f = [$f];
-    } elseif (is_int($s) && is_array($f)) {
-        $s = [$s];
-    } elseif (is_int($f) && is_int($s)) {
+        $s = $s[0];
+    }
+    if (is_int($s) && is_array($f)) {
+        $f = $f[0];
+    }
+    if (is_int($f) && is_int($s)) {
         return $f <= $s;
     }
 
@@ -49,16 +51,7 @@ foreach ($lines as $i => $pack) {
         continue;
     }
 
-    if (!isset($f[0]) && isset($s[0])) {
-        $r[] = $i + 1;
-        continue;
-    }
-
-    $ord = true;
-    for ($k = 0; $k < count($f); $k++) {
-        $ord = cmp($f[$k], $s[$k]);
-    }
-
+    $ord = cmp($f, $s);
     if ($ord) {
         $r[] = $i + 1;
     }
